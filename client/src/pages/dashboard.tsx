@@ -20,16 +20,7 @@ const Dashboard = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
   
-  // Agent statuses
-  const [agentStatuses, setAgentStatuses] = useState([
-    { name: "JD Generator", status: "online" as const },
-    { name: "Resume Ranker", status: "online" as const },
-    { name: "Email Automation", status: "online" as const },
-    { name: "Interview Scheduler", status: "online" as const },
-    { name: "Interview Agent", status: "training" as const },
-    { name: "Hire Recommendation", status: "online" as const },
-    { name: "Sentiment Analyzer", status: "needs attention" as const },
-  ]);
+  // Remove agent statuses section as requested
   
   // Mock hiring pipeline data
   const hiringPipeline = [
@@ -75,39 +66,7 @@ const Dashboard = () => {
     },
   ];
   
-  const refreshAgents = async () => {
-    try {
-      // In a real app, we would make an API call to refresh agent statuses
-      // For now, we'll just simulate it with a timeout
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Update a random agent's status for demonstration
-      const updatedStatuses = [...agentStatuses];
-      const randomIndex = Math.floor(Math.random() * updatedStatuses.length);
-      const statuses: ("online" | "offline" | "training" | "needs attention")[] = [
-        "online", "training", "needs attention"
-      ];
-      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-      
-      updatedStatuses[randomIndex] = {
-        ...updatedStatuses[randomIndex],
-        status: randomStatus,
-      };
-      
-      setAgentStatuses(updatedStatuses);
-      
-      toast({
-        title: "Agents refreshed",
-        description: "All agent statuses have been updated.",
-      });
-    } catch (error) {
-      toast({
-        title: "Failed to refresh agents",
-        description: "An error occurred while refreshing agent statuses.",
-        variant: "destructive",
-      });
-    }
-  };
+  // Removed refreshAgents function as requested
   
   // Stats data
   const statsData = {
