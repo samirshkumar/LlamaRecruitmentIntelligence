@@ -30,9 +30,9 @@ interface SidebarItemProps {
 const SidebarItem = ({ href, icon, label, active }: SidebarItemProps) => {
   return (
     <Link href={href}>
-      <a
+      <div
         className={cn(
-          "flex items-center py-3 px-4 rounded-md font-medium",
+          "flex items-center py-3 px-4 rounded-md font-medium cursor-pointer",
           active
             ? "bg-primary-light/10 text-primary-dark border-l-4 border-primary"
             : "text-gray-600 hover:bg-gray-100"
@@ -40,7 +40,7 @@ const SidebarItem = ({ href, icon, label, active }: SidebarItemProps) => {
       >
         <span className="mr-3">{icon}</span>
         {label}
-      </a>
+      </div>
     </Link>
   );
 };
