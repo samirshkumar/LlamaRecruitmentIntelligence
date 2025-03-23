@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -7,20 +6,16 @@ import { useToast } from "@/hooks/use-toast";
 
 // Dashboard Components
 import DashboardStats from "@/components/dashboard/DashboardStats";
-import RecentActivities from "@/components/dashboard/RecentActivities";
-import AgentStatusCard from "@/components/dashboard/AgentStatusCard";
 import HiringPipeline from "@/components/dashboard/HiringPipeline";
 
 const Dashboard = () => {
   const { toast } = useToast();
   
   // Query to fetch dashboard data
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ["/api/dashboard"],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
-  
-  // Remove agent statuses section as requested
   
   // Mock hiring pipeline data
   const hiringPipeline = [
@@ -66,8 +61,6 @@ const Dashboard = () => {
     },
   ];
   
-  // Removed refreshAgents function as requested
-  
   // Stats data
   const statsData = {
     activeJobs: data?.stats?.jobs?.active || 12,
@@ -109,24 +102,6 @@ const Dashboard = () => {
           interviewsScheduled={statsData.interviewsScheduled}
           positionsFilled={statsData.positionsFilled}
         />
-      </div>
-      
-      {/* Recent Activities & Agent Status */}
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Recent Activities */}
-        <div className="lg:col-span-2">
-          <RecentActivities
-            activities={data?.recentActivities || []}
-          />
-        </div>
-        
-        {/* Agent Status Card */}
-        <div>
-          <AgentStatusCard
-            agents={agentStatuses}
-            onRefresh={refreshAgents}
-          />
-        </div>
       </div>
       
       {/* Hiring Pipeline */}
