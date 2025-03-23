@@ -459,7 +459,7 @@ const VideoInterview = () => {
                       <div className="flex items-center space-x-3 mb-3">
                         <Avatar>
                           <AvatarFallback>
-                            {currentCandidate.name.split(" ").map(n => n[0]).join("").toUpperCase()}
+                            {currentCandidate.name.split(" ").map((n: string) => n[0]).join("").toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div>
@@ -659,16 +659,17 @@ const VideoInterview = () => {
                   <div className="flex justify-center py-4">
                     <Loader className="h-8 w-8 animate-spin text-gray-400" />
                   </div>
-                ) : interviews?.filter((i: Interview) => 
-                    i.status === "completed" && i.transcript?.includes('[Video Response]')).length === 0 ? (
+                ) : !interviews || !Array.isArray(interviews) || 
+                    interviews.filter((i: Interview) => 
+                      i.status === "completed" && i.transcript?.includes('[Video Response]')).length === 0 ? (
                   <div className="text-center py-4 text-gray-500">
                     <p>No completed video interviews found.</p>
                     <p className="text-sm mt-2">Complete a video interview to see it here.</p>
                   </div>
                 ) : (
                   <div className="divide-y">
-                    {interviews
-                      ?.filter((i: Interview) => 
+                    {Array.isArray(interviews) && interviews
+                      .filter((i: Interview) => 
                         i.status === "completed" && i.transcript?.includes('[Video Response]'))
                       .map((interview: Interview) => (
                         <div key={interview.id} className="py-4 first:pt-0 last:pb-0">
@@ -678,7 +679,7 @@ const VideoInterview = () => {
                                 <AvatarFallback>
                                   {getCandidateName(interview.candidateId)
                                     .split(" ")
-                                    .map((n) => n[0])
+                                    .map((n: string) => n[0])
                                     .join("")
                                     .toUpperCase()}
                                 </AvatarFallback>
