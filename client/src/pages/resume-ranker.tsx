@@ -106,7 +106,8 @@ const ResumeRanker = () => {
     rankMutation.mutate({
       jobId: selectedJobId,
       resumes: [resume],
-      jobDescription: selectedJob?.description
+      jobDescription: selectedJob?.description,
+      jobRequirements: selectedJob?.requirements
     });
   };
   

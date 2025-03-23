@@ -104,14 +104,87 @@ class LlamaClient {
   }
 
   private mockRankResumes(inputs: Record<string, any>) {
-    const { jobDescription, resumes } = inputs;
+    const { jobDescription, jobRequirements, resumes } = inputs;
     
-    return resumes.map((resume: any) => ({
-      ...resume,
-      score: Math.floor(Math.random() * 100),
-      matchedSkills: ["JavaScript", "React", "TypeScript"].slice(0, Math.floor(Math.random() * 3) + 1),
-      missingSkills: ["GraphQL", "Node.js", "AWS"].slice(0, Math.floor(Math.random() * 3))
-    })).sort((a: any, b: any) => b.score - a.score);
+    // Extract skills from job requirements
+    const requiredSkills = this.extractSkillsFromRequirements(jobRequirements || jobDescription);
+    
+    // Process each resume to find skill matches
+    return resumes.map((resume: any) => {
+      // Extract skills from resume text
+      const candidateSkills = this.extractSkillsFromResume(resume.resumeText);
+      
+      // Find matched skills (intersection)
+      const matchedSkills = candidateSkills.filter(skill => 
+        requiredSkills.some(reqSkill => reqSkill.toLowerCase() === skill.toLowerCase())
+      );
+      
+      // Find missing skills (required but not in resume)
+      const missingSkills = requiredSkills.filter(reqSkill => 
+        !candidateSkills.some(skill => skill.toLowerCase() === reqSkill.toLowerCase())
+      );
+      
+      // Calculate score based on skill matches (weighted)
+      const matchRatio = matchedSkills.length / requiredSkills.length;
+      const score = Math.min(Math.round(matchRatio * 100), 100);
+      
+      return {
+        ...resume,
+        score,
+        matchedSkills,
+        missingSkills
+      };
+    }).sort((a: any, b: any) => b.score - a.score);
+  }
+  
+  // Helper method to extract skills from job requirements
+  private extractSkillsFromRequirements(requirements: string): string[] {
+    // Common tech skills to look for
+    const commonSkills = [
+      "JavaScript", "TypeScript", "React", "Vue", "Angular", "Node.js", 
+      "Express", "Python", "Django", "Flask", "Java", "Spring", "C#", ".NET",
+      "PHP", "Laravel", "Ruby", "Rails", "Go", "Rust", "Swift", "Kotlin",
+      "HTML", "CSS", "SASS", "LESS", "Bootstrap", "Tailwind", "Material UI",
+      "GraphQL", "REST", "SQL", "MySQL", "PostgreSQL", "MongoDB", "Redis",
+      "AWS", "Azure", "GCP", "Firebase", "Docker", "Kubernetes", "CI/CD",
+      "Git", "GitHub", "Agile", "Scrum", "TDD", "DevOps", "Testing"
+    ];
+    
+    // Extract skills from requirements text
+    const skillsFound = commonSkills.filter(skill => 
+      requirements.toLowerCase().includes(skill.toLowerCase())
+    );
+    
+    // Add any explicitly mentioned required skills from comma or bullet separated lists
+    const explicitRequirements = requirements
+      .split(/[,.\-•\n]/)
+      .map(item => item.trim())
+      .filter(item => item.length > 2 && !skillsFound.includes(item));
+    
+    // Combine and deduplicate the array of skills
+    const allSkills = Array.from(new Set([...skillsFound, ...explicitRequirements]));
+    return allSkills;
+  }
+  
+  // Helper method to extract skills from resume text
+  private extractSkillsFromResume(resumeText: string): string[] {
+    // Common tech skills to look for
+    const commonSkills = [
+      "JavaScript", "TypeScript", "React", "Vue", "Angular", "Node.js", 
+      "Express", "Python", "Django", "Flask", "Java", "Spring", "C#", ".NET",
+      "PHP", "Laravel", "Ruby", "Rails", "Go", "Rust", "Swift", "Kotlin",
+      "HTML", "CSS", "SASS", "LESS", "Bootstrap", "Tailwind", "Material UI",
+      "GraphQL", "REST", "SQL", "MySQL", "PostgreSQL", "MongoDB", "Redis",
+      "AWS", "Azure", "GCP", "Firebase", "Docker", "Kubernetes", "CI/CD",
+      "Git", "GitHub", "Agile", "Scrum", "TDD", "DevOps", "Testing"
+    ];
+    
+    // Extract skills from resume text
+    const skillsFound = commonSkills.filter(skill => 
+      resumeText.toLowerCase().includes(skill.toLowerCase())
+    );
+    
+    return skillsFound;
   }
 
   private mockSuggestInterviewQuestions(inputs: Record<string, any>) {
