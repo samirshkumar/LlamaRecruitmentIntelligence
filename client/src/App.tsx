@@ -16,6 +16,7 @@ import InterviewScheduler from "./pages/interview-scheduler";
 import InterviewAgent from "./pages/interview-agent";
 import HireRecommendation from "./pages/hire-recommendation";
 import SentimentAnalyzer from "./pages/sentiment-analyzer";
+import VideoInterview from "./pages/video-interview";
 import NotFound from "./pages/not-found";
 
 function Router() {
@@ -28,6 +29,7 @@ function Router() {
         <Route path="/email-automation" component={EmailAutomation} />
         <Route path="/interview-scheduler" component={InterviewScheduler} />
         <Route path="/interview-agent" component={InterviewAgent} />
+        <Route path="/video-interview" component={VideoInterview} />
         <Route path="/hire-recommendation" component={HireRecommendation} />
         <Route path="/sentiment-analyzer" component={SentimentAnalyzer} />
         <Route component={NotFound} />

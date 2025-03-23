@@ -373,28 +373,30 @@ const VideoInterview = () => {
   
   // Get candidate name
   const getCandidateName = (candidateId: number) => {
-    const candidate = candidates?.find((c: Candidate) => c.id === candidateId);
+    if (!candidates) return "Unknown Candidate";
+    const candidate = candidates.find((c: Candidate) => c.id === candidateId);
     return candidate ? candidate.name : "Unknown Candidate";
   };
   
   // Get job title
   const getJobTitle = (jobId: number) => {
-    const job = jobs?.find((j: Job) => j.id === jobId);
+    if (!jobs) return "Unknown Position";
+    const job = jobs.find((j: Job) => j.id === jobId);
     return job ? job.title : "Unknown Position";
   };
   
   // Filter interviews that are scheduled but not completed
-  const scheduledInterviews = interviews?.filter(
-    (interview: Interview) => interview.status === "scheduled"
-  );
+  const scheduledInterviews = interviews && Array.isArray(interviews) 
+    ? interviews.filter((interview: Interview) => interview.status === "scheduled")
+    : [];
   
   // Get current interview details
-  const currentInterview = interviews?.find(
-    (interview: Interview) => interview.id === selectedInterviewId
-  );
+  const currentInterview = interviews && Array.isArray(interviews) && selectedInterviewId
+    ? interviews.find((interview: Interview) => interview.id === selectedInterviewId)
+    : null;
   
-  const currentCandidate = currentInterview
-    ? candidates?.find((c: Candidate) => c.id === currentInterview.candidateId)
+  const currentCandidate = currentInterview && candidates && Array.isArray(candidates)
+    ? candidates.find((c: Candidate) => c.id === currentInterview.candidateId)
     : null;
   
   return (

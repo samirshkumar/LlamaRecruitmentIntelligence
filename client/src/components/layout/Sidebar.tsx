@@ -10,6 +10,7 @@ import {
   Mail,
   Calendar,
   MessageSquare,
+  Video,
   ThumbsUp,
   Smile,
   LogOut,
@@ -60,6 +61,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     { href: "/email-automation", icon: <Mail size={20} />, label: "Email Automation" },
     { href: "/interview-scheduler", icon: <Calendar size={20} />, label: "Interview Scheduler" },
     { href: "/interview-agent", icon: <MessageSquare size={20} />, label: "Interview Agent" },
+    { href: "/video-interview", icon: <Video size={20} />, label: "Video Interview" },
     { href: "/hire-recommendation", icon: <ThumbsUp size={20} />, label: "Hire Recommendation" },
     { href: "/sentiment-analyzer", icon: <Smile size={20} />, label: "Sentiment Analyzer" }
   ];
