@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader, Mail, Users, FileText } from "lucide-react";
+import { Loader, Mail, Users, FileText, RefreshCw } from "lucide-react";
 
 interface Template {
   id: number;
@@ -494,7 +494,7 @@ const EmailAutomation = () => {
                       value={newTemplateSubject}
                       onChange={(e) => setNewTemplateSubject(e.target.value)}
                     />
-                    <p className="text-xs text-gray-500">Use {{placeholders}} for dynamic content</p>
+                    <p className="text-xs text-gray-500">Use {'{{'} placeholders {'}}'}  for dynamic content</p>
                   </div>
                   
                   <div className="space-y-2">
@@ -506,7 +506,7 @@ const EmailAutomation = () => {
                       value={newTemplateBody}
                       onChange={(e) => setNewTemplateBody(e.target.value)}
                     />
-                    <p className="text-xs text-gray-500">Available placeholders: {{candidate_name}}, {{position}}, {{interview_date}}, {{interview_time}}</p>
+                    <p className="text-xs text-gray-500">Available placeholders: {'{{'} candidate_name {'}}'},  {'{{'} position {'}}'},  {'{{'} interview_date {'}}'},  {'{{'} interview_time {'}}'}</p>
                   </div>
                 </CardContent>
                 

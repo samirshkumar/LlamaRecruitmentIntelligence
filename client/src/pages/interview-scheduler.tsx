@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, Clock, Loader, CalendarCheck, Users } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Loader, CalendarCheck, Users, RefreshCw } from "lucide-react";
 
 interface Candidate {
   id: number;
