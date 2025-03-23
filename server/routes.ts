@@ -10,6 +10,199 @@ import {
 } from "@shared/schema";
 import { z } from "zod";
 
+// Mock function to simulate the Llama 3.x API calls
+// In a real application, this would be a call to an actual Llama 3.x API
+async function mockLlamaRequest(task: string, params: any): Promise<any> {
+  // Simulate API call latency
+  await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
+  
+  // Handle different task types
+  switch (task) {
+    case "suggest-interview-questions":
+      return suggestInterviewQuestions(params);
+    case "conduct-video-interview":
+      return conductVideoInterview(params);
+    case "analyze-interview":
+      return analyzeInterview(params);
+    case "generate-recommendation":
+      return generateHireRecommendation(params);
+    case "analyze-sentiment":
+      return analyzeSentiment(params);
+    default:
+      throw new Error(`Unrecognized task: ${task}`);
+  }
+}
+
+// Simulate the Llama 3.x Video Interview Q&A
+function conductVideoInterview(params: any) {
+  const { jobTitle, candidateName, previousQuestions } = params;
+  
+  // Technical questions specific to video interviews
+  const videoInterviewQuestions = [
+    "Please introduce yourself and tell us about your background in your own words.",
+    `What specifically attracted you to this ${jobTitle} role and our company?`,
+    `Can you describe a challenging project related to ${jobTitle} that you worked on and how you approached it?`,
+    "How do you handle working under pressure or tight deadlines?",
+    "Where do you see yourself professionally in the next few years?",
+    "Do you have any questions for us about the role or company culture?"
+  ];
+  
+  // If we have previous questions, generate a follow-up question or provide feedback
+  if (previousQuestions && previousQuestions.length > 0) {
+    // If we've asked enough questions, conclude the interview
+    if (previousQuestions.length >= 4) {
+      return {
+        status: "completed",
+        message: `Thank you for completing this video interview, ${candidateName}. We'll review your responses and get back to you soon.`
+      };
+    }
+    
+    // Otherwise, ask the next question
+    const nextQuestionIndex = Math.min(previousQuestions.length, videoInterviewQuestions.length - 1);
+    return {
+      status: "in-progress",
+      question: videoInterviewQuestions[nextQuestionIndex],
+      questionNumber: nextQuestionIndex + 1,
+      totalQuestions: Math.min(5, videoInterviewQuestions.length)
+    };
+  }
+  
+  // Initial question to start the interview
+  return {
+    status: "started",
+    question: videoInterviewQuestions[0],
+    questionNumber: 1,
+    totalQuestions: Math.min(5, videoInterviewQuestions.length),
+    instructions: `Hello ${candidateName}, welcome to your interview for the ${jobTitle} position. Please enable your camera and microphone to begin. Answer each question clearly and concisely.`
+  };
+}
+
+// Mock function to suggest interview questions
+function suggestInterviewQuestions(params: any) {
+  const { jobTitle, candidateResume, previousResponses } = params;
+  
+  // Simulated questions based on job title
+  const technicalQuestions = [
+    `Can you describe your experience with technologies required for the ${jobTitle} role?`,
+    "How do you approach testing in your development process?",
+    "Can you explain a complex technical challenge you faced and how you solved it?",
+    "What's your experience with modern frameworks and how have they improved your workflow?",
+    "How do you stay up-to-date with the latest technologies and best practices?"
+  ];
+  
+  const behavioralQuestions = [
+    "Tell me about a time you had to work under pressure to meet a deadline.",
+    "How do you handle disagreements with team members?",
+    "Describe a situation where you had to learn a new technology quickly.",
+    "Tell me about a project you're particularly proud of.",
+    "How do you approach mentoring more junior team members?"
+  ];
+  
+  // If we have previous responses, generate a follow-up question
+  if (previousResponses && previousResponses.length > 0) {
+    const lastResponse = previousResponses[previousResponses.length - 1];
+    return {
+      question: `That's interesting. Can you elaborate more on the ${lastResponse.answer.split(" ").slice(0, 3).join(" ")}... aspect you mentioned?`
+    };
+  }
+  
+  // Initial question
+  return {
+    questions: {
+      technical: technicalQuestions,
+      behavioral: behavioralQuestions
+    },
+    recommendation: "Start with a technical question to assess skills, then move to behavioral questions."
+  };
+}
+
+// Mock function to analyze an interview
+function analyzeInterview(params: any) {
+  const { transcript } = params;
+  
+  return {
+    technicalAssessment: {
+      score: Math.floor(Math.random() * 5) + 1,
+      strengths: ["Problem-solving", "Technical knowledge", "System design"],
+      weaknesses: ["Could improve on architectural patterns", "Limited experience with distributed systems"]
+    },
+    communicationAssessment: {
+      score: Math.floor(Math.random() * 5) + 1,
+      strengths: ["Clear explanations", "Thoughtful responses"],
+      weaknesses: ["Could be more concise", "Some technical terms were misused"]
+    },
+    culturalFitAssessment: {
+      score: Math.floor(Math.random() * 5) + 1,
+      notes: "Candidate shows alignment with company values and seems collaborative."
+    }
+  };
+}
+
+// Mock function to generate hire recommendation
+function generateHireRecommendation(params: any) {
+  const { candidateName, interviewTranscript, jobTitle } = params;
+  
+  const randomRecommendation = Math.random() > 0.3 ? "hire" : "reject";
+  
+  return {
+    recommendation: randomRecommendation,
+    strengths: [
+      "Strong technical background",
+      "Good problem-solving approach",
+      "Excellent communication skills"
+    ],
+    weaknesses: [
+      "Limited experience with specific required technologies",
+      "Could benefit from more leadership experience"
+    ],
+    summary: `Based on the interview, ${candidateName} demonstrates strong technical abilities and communication skills required for the ${jobTitle} position. ${randomRecommendation === 'hire' ? 'I recommend proceeding with an offer.' : 'However, I recommend considering other candidates with more specific experience.'}`
+  };
+}
+
+// Mock function to analyze sentiment
+function analyzeSentiment(params: any) {
+  const { transcript } = params;
+  
+  return {
+    overall: {
+      positive: Math.random() * 0.7,
+      negative: Math.random() * 0.3,
+      neutral: Math.random() * 0.4
+    },
+    confidence: Math.random() * 0.5 + 0.5,
+    toneAnalysis: {
+      confident: Math.random() * 0.8,
+      hesitant: Math.random() * 0.4,
+      enthusiastic: Math.random() * 0.6,
+      nervous: Math.random() * 0.5
+    },
+    keyEmotionalIndicators: [
+      "Confidence when discussing technical experience",
+      "Slight nervousness when addressing gaps in knowledge",
+      "Enthusiasm when describing past projects"
+    ]
+  };
+}
+
+// Helper function to get next video interview question
+function getNextVideoQuestion(previousQuestions?: { question: string; answer?: string }[]) {
+  const videoInterviewQuestions = [
+    "Please introduce yourself and tell us about your background in your own words.",
+    "What motivated you to apply for this position?",
+    "Can you describe a challenging project you worked on and how you approached it?",
+    "How do you handle working under pressure or tight deadlines?",
+    "Where do you see yourself professionally in the next few years?",
+    "Do you have any questions for us about the role or company?"
+  ];
+  
+  if (previousQuestions && previousQuestions.length > 0) {
+    const nextQuestionIndex = Math.min(previousQuestions.length, videoInterviewQuestions.length - 1);
+    return videoInterviewQuestions[nextQuestionIndex];
+  }
+  
+  return videoInterviewQuestions[0];
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.post("/api/login", async (req: Request, res: Response) => {
@@ -504,6 +697,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Failed to conduct interview" });
+    }
+  });
+  
+  // Video Interview API Endpoint
+  app.post("/api/video-interview", async (req: Request, res: Response) => {
+    try {
+      const schema = z.object({
+        interviewId: z.number(),
+        videoResponse: z.string().optional(),
+        previousQuestions: z.array(z.object({
+          question: z.string(),
+          answer: z.string().optional()
+        })).optional()
+      });
+      
+      const validation = schema.safeParse(req.body);
+      
+      if (!validation.success) {
+        return res.status(400).json({
+          message: "Invalid data",
+          errors: validation.error.format()
+        });
+      }
+      
+      const { interviewId, videoResponse, previousQuestions } = validation.data;
+      
+      const interview = await storage.getInterview(interviewId);
+      
+      if (!interview) {
+        return res.status(404).json({ message: "Interview not found" });
+      }
+      
+      // If previous questions are provided, update the interview transcript
+      if (previousQuestions && previousQuestions.length > 0) {
+        const transcript = previousQuestions
+          .map(q => `Q: ${q.question}\nA: ${q.answer || '[Video Response]'}`)
+          .join("\n\n");
+        
+        await storage.updateInterview(interviewId, {
+          transcript,
+          status: previousQuestions.length >= 4 ? "completed" : "scheduled"
+        });
+        
+        // Log activity
+        const candidate = await storage.getCandidate(interview.candidateId);
+        const job = await storage.getJob(interview.jobId);
+        
+        if (candidate && job) {
+          await storage.createActivityLog({
+            agent: "Video Interview Agent",
+            action: previousQuestions.length >= 4 ? "Completed video interview" : "Updated video interview",
+            details: `${previousQuestions.length >= 4 ? "Completed" : "Updated"} video interview with ${candidate.name} for "${job.title}"`
+          });
+        }
+        
+        // If we're completing the interview, return a completion message
+        if (previousQuestions.length >= 4) {
+          return res.json({
+            status: "completed",
+            message: "Video interview completed successfully."
+          });
+        }
+      }
+      
+      // Get job and candidate for contextual information
+      const candidate = await storage.getCandidate(interview.candidateId);
+      const job = await storage.getJob(interview.jobId);
+      
+      // Get job and candidate for contextual information for Llama AI
+      const candidateName = candidate ? candidate.name : "Candidate";
+      const jobTitle = job ? job.title : "Position";
+      
+      // Call the Llama 3.x API (mocked for this demo)
+      const result = await mockLlamaRequest("conduct-video-interview", {
+        interviewId,
+        jobTitle,
+        candidateName,
+        previousQuestions: previousQuestions || []
+      });
+      
+      // Prepare response with Llama 3.x generated content
+      const response = {
+        status: previousQuestions && previousQuestions.length > 0 ? "in-progress" : "started",
+        question: result.question || getNextVideoQuestion(previousQuestions),
+        questionNumber: previousQuestions ? previousQuestions.length + 1 : 1,
+        totalQuestions: 5,
+        instructions: previousQuestions && previousQuestions.length > 0 ? undefined : 
+          "Please enable your camera and microphone to begin the video interview. Answer each question clearly and concisely."
+      };
+      
+      res.json(response);
+    } catch (error) {
+      console.error("Error conducting video interview:", error);
+      res.status(500).json({ message: "Failed to conduct video interview" });
     }
   });
   
