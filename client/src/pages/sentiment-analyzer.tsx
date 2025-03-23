@@ -165,24 +165,24 @@ const SentimentAnalyzer = () => {
   
   // Prepare data for pie chart
   const getPieChartData = () => {
-    if (!sentimentAnalysis || !sentimentAnalysis.sentimentAnalysis) return [];
+    if (!sentimentAnalysis || !sentimentAnalysis.sentimentAnalysis || !sentimentAnalysis.sentimentAnalysis.overall) return [];
     
     const { overall } = sentimentAnalysis.sentimentAnalysis;
     return [
-      { name: "Positive", value: Math.round(overall.positive * 100) },
-      { name: "Negative", value: Math.round(overall.negative * 100) },
-      { name: "Neutral", value: Math.round(overall.neutral * 100) },
+      { name: "Positive", value: Math.round((overall.positive || 0) * 100) },
+      { name: "Negative", value: Math.round((overall.negative || 0) * 100) },
+      { name: "Neutral", value: Math.round((overall.neutral || 0) * 100) },
     ];
   };
   
   // Prepare data for tone analysis chart
   const getToneChartData = () => {
-    if (!sentimentAnalysis || !sentimentAnalysis.sentimentAnalysis) return [];
+    if (!sentimentAnalysis || !sentimentAnalysis.sentimentAnalysis || !sentimentAnalysis.sentimentAnalysis.toneAnalysis) return [];
     
     const { toneAnalysis } = sentimentAnalysis.sentimentAnalysis;
     return Object.entries(toneAnalysis).map(([key, value]) => ({
       name: key.charAt(0).toUpperCase() + key.slice(1),
-      value: Math.round((value as number) * 100),
+      value: Math.round(((value as number) || 0) * 100),
     }));
   };
   
