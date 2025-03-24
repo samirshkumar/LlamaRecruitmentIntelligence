@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader, FileText, Save } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 
 const JDGenerator = () => {
   const { toast } = useToast();
@@ -130,6 +131,7 @@ const JDGenerator = () => {
   
   return (
     <div>
+      <BackButton to="/jobs" label="Back to Jobs" />
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           Job Description Generator

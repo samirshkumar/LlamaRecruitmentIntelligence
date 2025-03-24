@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader, Save, Key, RefreshCcw } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 
 // Define schema for API key settings
 const apiKeyFormSchema = z.object({
@@ -187,6 +188,7 @@ const Settings = () => {
 
   return (
     <div>
+      <BackButton to="/dashboard" label="Back to Dashboard" />
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           Settings
