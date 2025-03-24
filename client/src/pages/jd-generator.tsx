@@ -131,7 +131,7 @@ const JDGenerator = () => {
   
   return (
     <div>
-      <BackButton to="/jobs" label="Back to Jobs" />
+      <BackButton to="/" label="Back to Dashboard" />
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           Job Description Generator
