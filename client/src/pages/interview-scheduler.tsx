@@ -154,7 +154,7 @@ const InterviewScheduler = () => {
   
   return (
     <div>
-      <BackButton to="/scheduled-interviews" label="Back to Interviews" />
+      <BackButton to="/" label="Back to Dashboard" />
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           Interview Scheduler

@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate, formatTime } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Interview {
   id: number;
@@ -83,6 +84,7 @@ const ScheduledInterviews = () => {
   
   return (
     <div>
+      <BackButton to="/" label="Back to Dashboard" />
       {/* Page header */}
       <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
         <div>
