@@ -72,9 +72,22 @@ Comprehensive analytics dashboard providing:
    ```
 
 4. Start the development server:
+
+   **For macOS/Linux:**
    ```
    npm run dev
    ```
+
+   **For Windows:**
+   ```
+   # Option 1: Use the provided batch file
+   start-windows.bat
+
+   # Option 2: Run with cross-env
+   npx cross-env NODE_ENV=development tsx server/index.ts
+   ```
+   
+   For detailed Windows setup instructions, see `WINDOWS_SETUP.md`.
 
 5. Access the application at `http://localhost:5000`
 
