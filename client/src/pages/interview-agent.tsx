@@ -129,15 +129,18 @@ const InterviewAgent = () => {
               
             setCurrentQuestion(followUp);
             
+            // Add the AI message directly here
             setMessages(prevMessages => [
               ...prevMessages.filter(msg => !msg.isThinking),
               { type: "ai", content: followUp }
             ]);
             
             setUserResponse("");
+            
+            // Return the status but don't include the question
+            // since we've already displayed it above
             return { 
-              status: "in-progress", 
-              question: followUp
+              status: "in-progress" 
             };
           } else {
             // End interview after 5 questions
@@ -185,7 +188,9 @@ const InterviewAgent = () => {
           title: "Interview completed",
           description: "The interview has been successfully completed.",
         });
-      } else if (data.question) {
+      } else if (data.question && !data.hasOwnProperty('status')) {
+        // Only add the message if we didn't already add it in the mutationFn
+        // and if we got a response from the server (not our local Llama processing)
         setCurrentQuestion(data.question);
         setMessages(prevMessages => [
           ...prevMessages,
