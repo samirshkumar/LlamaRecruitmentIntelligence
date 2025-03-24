@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { formatDate, formatTime, getStatusColor } from "@/lib/utils";
+import { llamaClient } from "@/lib/llamaClient";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -115,11 +116,56 @@ const VideoInterview = () => {
     },
   });
   
-  // Submit video response mutation
+  // Submit video response mutation with direct Llama integration
   const submitResponseMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "/api/video-interview", data);
-      return response.json();
+      try {
+        // Show processing toast
+        toast({
+          title: "Processing response",
+          description: "Analyzing your video response...",
+        });
+        
+        // Direct Llama processing for more interactive experience
+        const llamaResponse = await llamaClient.process({
+          task: 'conduct-video-interview',
+          inputs: {
+            interviewId: data.interviewId,
+            videoResponse: data.videoResponse,
+            previousQuestions: data.previousQuestions
+          }
+        });
+        
+        // If successful Llama processing, use that response
+        if (llamaResponse.success && llamaResponse.data) {
+          const result = llamaResponse.data;
+          
+          if (result.status === "completed") {
+            return {
+              status: "completed",
+              message: "Thank you for completing this video interview. Your responses were insightful and will be thoroughly reviewed by our team."
+            };
+          } else {
+            return {
+              status: "in-progress",
+              question: result.question,
+              questionNumber: result.questionNumber,
+              totalQuestions: result.totalQuestions,
+              instructions: result.instructions
+            };
+          }
+        }
+        
+        // Fallback to server API if Llama processing doesn't return expected data
+        console.log("Falling back to server API for video interview");
+        const response = await apiRequest("POST", "/api/video-interview", data);
+        return response.json();
+      } catch (error) {
+        // Fallback to server API if any error occurs
+        console.error("Error in Llama processing:", error);
+        const response = await apiRequest("POST", "/api/video-interview", data);
+        return response.json();
+      }
     },
     onSuccess: (data) => {
       if (data.status === "completed") {
@@ -128,14 +174,26 @@ const VideoInterview = () => {
         toast({
           title: "Interview completed",
           description: "The video interview has been successfully completed.",
+          duration: 5000,
         });
       } else {
-        setCurrentQuestion(data.question);
+        // Add dynamic response variations for more engaging interview experience
+        const responsePrefix = data.questionNumber > 1 ? 
+          [
+            "Thank you for your response.",
+            "That's interesting.",
+            "I appreciate your insights.",
+            "Good perspective."
+          ][Math.floor(Math.random() * 4)] + " " : "";
+        
+        const formattedQuestion = responsePrefix + data.question;
+        
+        setCurrentQuestion(formattedQuestion);
         setQuestionNumber(data.questionNumber);
         setTotalQuestions(data.totalQuestions);
         
         // Add the new question to the list
-        setQuestions(prevQuestions => [...prevQuestions, { question: data.question }]);
+        setQuestions(prevQuestions => [...prevQuestions, { question: formattedQuestion }]);
       }
       
       // Reset recording state
