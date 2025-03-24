@@ -21,6 +21,7 @@ import HireRecommendation from "./pages/hire-recommendation";
 import HiredCandidates from "./pages/hired-candidates";
 import SentimentAnalyzer from "./pages/sentiment-analyzer";
 import VideoInterview from "./pages/video-interview";
+import Settings from "./pages/settings";
 import NotFound from "./pages/not-found";
 
 function Router() {
