@@ -39,6 +39,7 @@ interface Job {
 interface Message {
   type: "ai" | "human";
   content: string;
+  isThinking?: boolean;
 }
 
 const InterviewAgent = () => {
@@ -92,25 +93,98 @@ const InterviewAgent = () => {
     },
   });
   
-  // Submit response mutation
+  // Submit response mutation with direct Llama integration
   const submitResponseMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "/api/conduct-interview", data);
-      return response.json();
-    },
-    onSuccess: (data) => {
-      if (data.status === "completed") {
-        setIsInterviewActive(false);
+      // First try to use local Llama processing for more interactive experience
+      try {
+        // Show thinking animation
         setMessages(prevMessages => [
           ...prevMessages,
-          { type: "ai", content: "Thank you for completing the interview! We'll review your responses and get back to you soon." }
+          { type: "ai", content: "Thinking...", isThinking: true }
         ]);
+
+        // Process via Llama directly for more dynamic responses
+        const llamaResponse = await llamaClient.process({
+          task: 'suggest-interview-questions',
+          inputs: {
+            jobTitle: getJobTitle(currentInterview?.jobId || 0),
+            previousResponses: data.responses,
+            candidateResponse: data.responses[data.responses.length - 1].answer
+          }
+        });
+
+        // If successful Llama processing, use that response
+        if (llamaResponse.success && llamaResponse.data) {
+          // Remove thinking message
+          setMessages(prevMessages => prevMessages.filter(msg => !msg.isThinking));
+          
+          // For ongoing interview
+          if (data.responses.length < 5) {
+            // For variety, sometimes add a follow-up comment before the next question
+            const followUp = Math.random() > 0.5 
+              ? `That's interesting. ${llamaResponse.data.question}` 
+              : llamaResponse.data.question;
+              
+            setCurrentQuestion(followUp);
+            
+            setMessages(prevMessages => [
+              ...prevMessages.filter(msg => !msg.isThinking),
+              { type: "ai", content: followUp }
+            ]);
+            
+            setUserResponse("");
+            return { 
+              status: "in-progress", 
+              question: followUp
+            };
+          } else {
+            // End interview after 5 questions
+            setIsInterviewActive(false);
+            setMessages(prevMessages => [
+              ...prevMessages.filter(msg => !msg.isThinking),
+              { type: "ai", content: "Thank you for completing the interview! Your responses were insightful. We'll review them and get back to you soon." }
+            ]);
+            
+            toast({
+              title: "Interview completed",
+              description: "The interview has been successfully completed.",
+            });
+            
+            return { 
+              status: "completed"
+            };
+          }
+        }
+
+        // Fallback to server API if Llama processing fails
+        const response = await apiRequest("POST", "/api/conduct-interview", data);
+        return response.json();
+      } catch (error) {
+        // Fallback to server API if any error occurs
+        console.error("Error in local Llama processing:", error);
+        const response = await apiRequest("POST", "/api/conduct-interview", data);
+        return response.json();
+      }
+    },
+    onSuccess: (data) => {
+      // Remove any thinking messages
+      setMessages(prevMessages => prevMessages.filter(msg => !msg.isThinking));
+      
+      if (data.status === "completed") {
+        setIsInterviewActive(false);
+        if (!messages.some(m => m.content.includes("Thank you for completing"))) {
+          setMessages(prevMessages => [
+            ...prevMessages,
+            { type: "ai", content: "Thank you for completing the interview! We'll review your responses and get back to you soon." }
+          ]);
+        }
         
         toast({
           title: "Interview completed",
           description: "The interview has been successfully completed.",
         });
-      } else {
+      } else if (data.question) {
         setCurrentQuestion(data.question);
         setMessages(prevMessages => [
           ...prevMessages,
@@ -121,6 +195,9 @@ const InterviewAgent = () => {
       setUserResponse("");
     },
     onError: (error) => {
+      // Remove thinking message on error
+      setMessages(prevMessages => prevMessages.filter(msg => !msg.isThinking));
+      
       toast({
         title: "Error",
         description: "Failed to submit response: " + error,
@@ -200,9 +277,9 @@ const InterviewAgent = () => {
   };
   
   // Scroll to bottom when messages change
-  useState(() => {
+  useEffect(() => {
     scrollToBottom();
-  });
+  }, [messages]);
   
   // Get candidate name
   const getCandidateName = (candidateId: number) => {
@@ -366,9 +443,18 @@ const InterviewAgent = () => {
                           >
                             <div className="flex items-start">
                               {message.type === "ai" && (
-                                <Bot className="h-5 w-5 mr-2 mt-0.5" />
+                                <Bot className={`h-5 w-5 mr-2 mt-0.5 ${message.isThinking ? 'animate-pulse text-primary' : ''}`} />
                               )}
-                              <div>{message.content}</div>
+                              <div className={message.isThinking ? 'animate-pulse' : ''}>
+                                {message.content}
+                                {message.isThinking && (
+                                  <span className="inline-block ml-1">
+                                    <span className="animate-[bounce_1s_ease-in-out_0s_infinite]">.</span>
+                                    <span className="animate-[bounce_1s_ease-in-out_0.2s_infinite]">.</span>
+                                    <span className="animate-[bounce_1s_ease-in-out_0.4s_infinite]">.</span>
+                                  </span>
+                                )}
+                              </div>
                               {message.type === "human" && (
                                 <User className="h-5 w-5 ml-2 mt-0.5" />
                               )}
