@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Candidate {
   id: number;
@@ -92,6 +93,7 @@ const HiredCandidates = () => {
   
   return (
     <div>
+      <BackButton to="/" label="Back to Dashboard" />
       {/* Page header */}
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
