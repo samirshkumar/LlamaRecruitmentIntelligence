@@ -88,7 +88,7 @@ const DashboardStats = ({
         title="Total Candidates"
         value={totalCandidates}
         linkText="View all"
-        linkUrl="/resume-ranker"
+        linkUrl="/candidates"
       />
       
       <StatCard
@@ -96,8 +96,8 @@ const DashboardStats = ({
         iconBgColor="bg-blue-400"
         title="Interviews Scheduled"
         value={interviewsScheduled}
-        linkText="View calendar"
-        linkUrl="/interview-scheduler"
+        linkText="View all"
+        linkUrl="/scheduled-interviews"
       />
       
       <StatCard
@@ -105,8 +105,8 @@ const DashboardStats = ({
         iconBgColor="bg-green-500"
         title="Positions Filled"
         value={positionsFilled}
-        linkText="View details"
-        linkUrl="/hire-recommendation"
+        linkText="View all"
+        linkUrl="/hired-candidates"
       />
     </div>
   );
