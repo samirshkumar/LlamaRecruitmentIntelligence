@@ -63,10 +63,10 @@ const Dashboard = () => {
   
   // Stats data
   const statsData = {
-    activeJobs: data?.stats?.jobs?.active || 12,
-    totalCandidates: data?.stats?.candidates?.total || 86,
-    interviewsScheduled: data?.stats?.interviews?.scheduled || 24,
-    positionsFilled: data?.stats?.candidates?.hired || 8,
+    activeJobs: data?.stats?.jobs?.active || 4,
+    totalCandidates: data?.stats?.candidates?.total || 15,
+    interviewsScheduled: data?.stats?.interviews?.scheduled || 5,
+    positionsFilled: data?.stats?.candidates?.hired || 3,
   };
   
   if (isError) {

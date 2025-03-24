@@ -79,7 +79,7 @@ const DashboardStats = ({
         title="Active Jobs"
         value={activeJobs}
         linkText="View all"
-        linkUrl="/jd-generator"
+        linkUrl="/jobs"
       />
       
       <StatCard

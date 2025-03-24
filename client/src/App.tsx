@@ -10,6 +10,7 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 // Pages
 import Dashboard from "./pages/dashboard";
 import JDGenerator from "./pages/jd-generator";
+import Jobs from "./pages/jobs";
 import ResumeRanker from "./pages/resume-ranker";
 import EmailAutomation from "./pages/email-automation";
 import InterviewScheduler from "./pages/interview-scheduler";
@@ -25,6 +26,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Dashboard} />
         <Route path="/jd-generator" component={JDGenerator} />
+        <Route path="/jobs" component={Jobs} />
         <Route path="/resume-ranker" component={ResumeRanker} />
         <Route path="/email-automation" component={EmailAutomation} />
         <Route path="/interview-scheduler" component={InterviewScheduler} />
