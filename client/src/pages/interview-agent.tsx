@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader, Bot, Send, User, MessageCircle } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Interview {
   id: number;
@@ -309,6 +310,7 @@ const InterviewAgent = () => {
   
   return (
     <div>
+      <BackButton to="/scheduled-interviews" label="Back to Interviews" />
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           Interview Agent

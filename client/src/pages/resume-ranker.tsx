@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Loader, Upload, Star, List, RefreshCw } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Resume {
   id?: number;
@@ -150,6 +151,7 @@ const ResumeRanker = () => {
   
   return (
     <div>
+      <BackButton to="/candidates" label="Back to Candidates" />
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           Resume Ranker
