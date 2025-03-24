@@ -14,7 +14,8 @@ import {
   ThumbsUp,
   Smile,
   LogOut,
-  Menu
+  Menu,
+  Settings
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -63,7 +64,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     { href: "/interview-agent", icon: <MessageSquare size={20} />, label: "Interview Agent" },
     { href: "/video-interview", icon: <Video size={20} />, label: "Video Interview" },
     { href: "/hire-recommendation", icon: <ThumbsUp size={20} />, label: "Hire Recommendation" },
-    { href: "/sentiment-analyzer", icon: <Smile size={20} />, label: "Sentiment Analyzer" }
+    { href: "/sentiment-analyzer", icon: <Smile size={20} />, label: "Sentiment Analyzer" },
+    { href: "/settings", icon: <Settings size={20} />, label: "Settings" }
   ];
 
   return (

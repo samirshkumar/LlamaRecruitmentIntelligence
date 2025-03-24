@@ -1047,6 +1047,157 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Settings routes
+  // Get all settings
+  app.get("/api/settings", async (req: Request, res: Response) => {
+    try {
+      // In a real app, these settings would be fetched from a database
+      // For this demo, we'll return mock settings
+      const settings = {
+        llamaApiKey: process.env.LLAMA_API_KEY || "",
+        useTestMode: true,
+        companyName: "Llama Recruit",
+        emailNotifications: true,
+        autoSaveInterviews: true
+      };
+      
+      res.json(settings);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to fetch settings" });
+    }
+  });
+
+  // Update API key settings
+  app.post("/api/settings/api-key", async (req: Request, res: Response) => {
+    try {
+      const apiKeySchema = z.object({
+        llamaApiKey: z.string().min(1, "API key is required"),
+        useTestMode: z.boolean().default(false)
+      });
+      
+      const validation = apiKeySchema.safeParse(req.body);
+      
+      if (!validation.success) {
+        return res.status(400).json({
+          message: "Invalid settings data",
+          errors: validation.error.format()
+        });
+      }
+      
+      const { llamaApiKey, useTestMode } = validation.data;
+      
+      // In a real app, we would save these settings to a database
+      // For this demo, we'll just log them and return success
+      console.log("API Key settings updated:", { llamaApiKey: "****" + llamaApiKey.slice(-4), useTestMode });
+      
+      // In a production environment, we would securely store the API key
+      // Here we'll set it as an environment variable for demonstration purposes
+      process.env.LLAMA_API_KEY = llamaApiKey;
+      
+      // Log activity
+      await storage.createActivityLog({
+        agent: "Settings",
+        action: "Update API key",
+        details: "Updated Llama 3.x API key settings"
+      });
+      
+      res.json({ 
+        success: true,
+        message: "API key settings saved successfully" 
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to update API key settings" });
+    }
+  });
+
+  // Update general settings
+  app.post("/api/settings/general", async (req: Request, res: Response) => {
+    try {
+      const generalSettingsSchema = z.object({
+        companyName: z.string().min(1, "Company name is required"),
+        emailNotifications: z.boolean().default(true),
+        autoSaveInterviews: z.boolean().default(true)
+      });
+      
+      const validation = generalSettingsSchema.safeParse(req.body);
+      
+      if (!validation.success) {
+        return res.status(400).json({
+          message: "Invalid settings data",
+          errors: validation.error.format()
+        });
+      }
+      
+      const { companyName, emailNotifications, autoSaveInterviews } = validation.data;
+      
+      // In a real app, we would save these settings to a database
+      // For this demo, we'll just log them and return success
+      console.log("General settings updated:", { companyName, emailNotifications, autoSaveInterviews });
+      
+      // Log activity
+      await storage.createActivityLog({
+        agent: "Settings",
+        action: "Update general settings",
+        details: `Updated general settings: Company name, Email notifications, Auto-save interviews`
+      });
+      
+      res.json({ 
+        success: true,
+        message: "General settings saved successfully" 
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to update general settings" });
+    }
+  });
+
+  // Test API key
+  app.post("/api/settings/test-api-key", async (req: Request, res: Response) => {
+    try {
+      const apiKeySchema = z.object({
+        apiKey: z.string().min(1, "API key is required")
+      });
+      
+      const validation = apiKeySchema.safeParse(req.body);
+      
+      if (!validation.success) {
+        return res.status(400).json({
+          message: "Invalid API key",
+          errors: validation.error.format()
+        });
+      }
+      
+      const { apiKey } = validation.data;
+      
+      // In a real app, we would make a test request to the Llama API
+      // For this demo, we'll simulate API validation with a delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // For demo purposes, consider any API key valid if it's at least 10 characters long
+      const isValid = apiKey.length >= 10;
+      
+      if (isValid) {
+        res.json({ 
+          success: true,
+          message: "API key is valid" 
+        });
+      } else {
+        res.json({ 
+          success: false,
+          error: "Invalid API key format or credentials" 
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ 
+        success: false,
+        error: "Failed to test API key" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

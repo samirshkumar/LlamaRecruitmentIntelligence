@@ -41,6 +41,7 @@ function Router() {
         <Route path="/hire-recommendation" component={HireRecommendation} />
         <Route path="/hired-candidates" component={HiredCandidates} />
         <Route path="/sentiment-analyzer" component={SentimentAnalyzer} />
+        <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>
     </DashboardLayout>
