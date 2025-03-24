@@ -151,7 +151,7 @@ const ResumeRanker = () => {
   
   return (
     <div>
-      <BackButton to="/candidates" label="Back to Candidates" />
+      <BackButton to="/" label="Back to Dashboard" />
       <div className="pb-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold leading-7 text-gray-700 sm:text-3xl">
           Resume Ranker
