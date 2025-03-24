@@ -47,9 +47,9 @@ const StatCard = ({
         <div className="bg-gray-50 px-5 py-3">
           <div className="text-sm">
             <Link href={linkUrl}>
-              <a className="font-medium text-primary hover:text-primary-light">
+              <div className="font-medium text-primary hover:text-primary-light cursor-pointer">
                 {linkText}
-              </a>
+              </div>
             </Link>
           </div>
         </div>
